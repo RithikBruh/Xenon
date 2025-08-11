@@ -4,6 +4,8 @@ import json
 import websockets
 
 SERVER = "ws://127.0.0.1:8000/ws"  # local server address
+SERVER = "ws://100.115.241.16:8000/ws"  # local server address
+
 # For Tailscale later, replace with: ws://<tailscale-ip>:8000/ws
 
 async def receiver(ws):
