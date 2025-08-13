@@ -10,6 +10,38 @@ DB_PATH = "chat.db"
 
 app = FastAPI()
 
+# --- General SQL execution function ---
+async def run_sql(query: str, params: tuple = ()):
+    """Run a SQL query."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(query, params)
+        await db.commit()
+
+
+# --- Admin Command Func ---
+async def admin_command(msg):
+    """Handle admin commands."""
+    if msg.strip() == "clear all":
+        print("Clearing all messages...")
+        await run_sql("DELETE FROM messages")
+    
+    if msg.strip()[:6] == "delete":
+        index = msg.strip()[7:]
+        print(index)
+        await run_sql(
+        """
+        DELETE FROM messages
+        WHERE id IN (
+            SELECT id FROM messages
+            ORDER BY id DESC
+            LIMIT ?
+        )
+        """,
+        (index,))
+
+        print(f"Deleted last {index} messages.")
+
+
 # --- Connection manager to track connected websockets ---
 class ConnectionManager:
     def __init__(self):
@@ -38,19 +70,23 @@ manager = ConnectionManager()
 
 # --- Database helpers ---
 async def init_db():
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute("""
-            CREATE TABLE IF NOT EXISTS messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                sender TEXT NOT NULL,
-                recipient TEXT,
-                message TEXT NOT NULL,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        await db.commit()
+    """Initialize the database and create tables if they don't exist."""
+    await run_sql("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender TEXT NOT NULL,
+            recipient TEXT,
+            message TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
 
 async def save_message(sender: str, recipient: str, message: str):
+
+    if message[:5] == "$sudo":
+        # Handle admin command
+        await admin_command(message[5:])
+
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             "INSERT INTO messages (sender, recipient, message) VALUES (?, ?, ?)",
