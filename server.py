@@ -19,15 +19,22 @@ async def run_sql(query: str, params: tuple = ()):
 
 
 # --- Admin Command Func ---
-async def admin_command(msg):
+async def admin_command(msg,sender):
     """Handle admin commands."""
+    msg_list  = msg.lower()[1:].split(" ")
+    print(msg_list)
+
+    #TODO : help command
+
+
+
     if msg.strip() == "clear all":
         print("Clearing all messages...")
         await run_sql("DELETE FROM messages")
-    
-    if msg.strip()[:6] == "delete":
-        index = msg.strip()[7:]
-        print(index)
+
+    elif msg_list[0]== "delete" and "-" not in msg_list[1]:
+        #deletes everyones msgs # delete <index>
+        index =msg_list[1]
         await run_sql(
         """
         DELETE FROM messages
@@ -39,8 +46,37 @@ async def admin_command(msg):
         """,
         (index,))
 
-        print(f"Deleted last {index} messages.")
+    elif msg_list[0] == "delete" and msg_list[1] == "-me":
+        # deletes senders msgs # delete -me <index>
+        index = msg_list[2]
+        await run_sql(
+        """
+        DELETE FROM messages
+        WHERE id IN (
+            SELECT id FROM messages
+            WHERE sender = ?
+            ORDER BY id DESC
+            LIMIT ?
+        )
+        """,
+        (sender, index))
 
+        print(f"Deleted last {index} messages of {sender}.")
+
+    elif msg_list[0] == "delete" and msg_list[1] == '-id':
+        # delete a specific id message
+        # delete -id <id>
+        id= msg_list[2]
+        await run_sql(
+        """
+        DELETE FROM messages
+        WHERE id = ?
+        """,
+        (id,))
+        print(f"Deleted message with id {id}.")
+
+    else :
+        print("error command") #TODO : admin msg
 
 # --- Connection manager to track connected websockets ---
 class ConnectionManager:
@@ -85,7 +121,7 @@ async def save_message(sender: str, recipient: str, message: str):
 
     if message[:5] == "$sudo":
         # Handle admin command
-        await admin_command(message[5:])
+        await admin_command(message[5:],sender)
 
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
