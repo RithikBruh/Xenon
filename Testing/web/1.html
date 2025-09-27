@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Infinite Scroll</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 200vh; /* two stacked images */
+    }
+
+    #bg img {
+      width: 100%;
+      height: 100vh;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="bg">
+    <img src="https://picsum.photos/1080/1920?1" alt="">
+    <img src="https://picsum.photos/1080/1920?1" alt="">
+  </div>
+
+  <script>
+    const bg = document.getElementById("bg");
+    let y = 0;
+    let speed = 1; // pixels per frame
+
+    function animate() {
+      y -= speed;
+      if (y <= -window.innerHeight) {
+        y = 0; // reset loop
+      }
+      bg.style.transform = `translateY(${y}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
