@@ -1,1 +1,7 @@
-pip install fastapi uvicorn aiosqlite websockets
+fastapi 
+uvicorn 
+aiosqlite 
+websockets
+bcrypt 
+PyJWT
+
