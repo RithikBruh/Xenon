@@ -8,7 +8,7 @@ def get_timestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 SERVER = "ws://127.0.0.1:8000/ws"  # local server address
-SERVER = "ws://100.115.241.16:8000/ws"  # tail scale ip of *server
+SERVER = "ws://100.100.154.45:8000/ws"  # tail scale ip of *server
 
 token = None
 
@@ -62,7 +62,7 @@ async def main():
         await ws.send(json.dumps(login_payload))
 
 
-        # wait for response
+        # wai for response
         response = json.loads(await ws.recv())
         if response.get("type") == "login_failed":
             print("❌ Login failed:", response.get("message"))
