@@ -11,9 +11,11 @@ function login(flag) {
     if(username === "view" && password === "view") {
         bt_text.style.color = "red";
             setTimeout(() => {
-        bt_text.style.color = "transparent";
+        bt_text.innerText = "Log";
     }, 3000);
+    bt_text.innerText = "";
     } 
+    
 
     else if (username === "admin" && password === "admin") {
         if (flag)
