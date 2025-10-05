@@ -1,6 +1,6 @@
 
 * {
-  cursor: url('cursor.png'), auto !important;
+  cursor: url('../img/cursor.png'), auto !important;
 }
 
 .login_button {

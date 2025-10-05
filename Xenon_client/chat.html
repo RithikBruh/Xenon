@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Terminal with Panels</title>
+  <link rel="stylesheet" href="style/style_chat.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Terminal -->
+    <div id="terminal">
+      <div id="output"></div>
+      <div class = "divider" >------------------------------------------- [INPUT] -------------------------------------------</div>
+      <textarea id="input-box" placeholder="Shfit + Enter : New Line"></textarea>
+      <div id="input-buttons">
+  <button class="terminal-btn" onclick="appendLine('Hack pressed')">    Edit    </button>
+  <button class="terminal-btn" onclick="appendLine('Hack pressed')">    Reply   </button>
+  <button class="terminal-btn" onclick="appendLine('Trace pressed')">   Delete</button>
+  <button class="terminal-btn" onclick="appendLine('Bypass pressed')">  Delete Multiple </button>
+  <button class="terminal-btn" onclick="appendLine('Bypass pressed')">    Ping    </button>
+  <button class="terminal-btn" onclick="appendLine('Bypass pressed')">   Cover   </button>
+</div>
+
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <!-- File Manager -->
+      <!-- File Manager -->
+<div class="window" id="file-window">
+  <div class="title-bar">---------------- [File Manager] ---------------</div>
+  <div class="content" id="file-manager">
+    <div id="file-lock-icon" onclick="unlockFileManager()">
+  <img src="img/lock_icon.png" alt="Locked" />
+</div>
+    <div id="file-content" class="hidden">
+      <div class="folder" onclick="toggleFolder('folder1')">▶ project</div>
+      <div id="folder1" class="hidden">
+        <div class="file">index.html</div>
+        <div class="file">style.css</div>
+        <div class="file">script.js</div>
+      </div>
+      <div class="folder" onclick="toggleFolder('folder2')">▶ server</div>
+      <div id="folder2" class="hidden">
+        <div class="file">server.js</div>
+        <div class="file">config.json</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+      <!-- Online Users -->
+      <div class="window" id="users-window">
+        <div class="title-bar">---------------- [Online Users] ----------------</div>
+        <div class="content" id="users">
+          <div class="user">👤User1</div>
+          <div class="user">👤User2</div>
+
+        </div>
+      </div>
+
+      <!-- Pinned Messages -->
+      <div class="window" id="pinned-window">
+        <div class="title-bar">--------------- [Pinned Messages] --------------</div>
+        <div class="content" id="pinned">
+          <p>[Admin] Welcome to the system.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+          <p>[Note] Maintenance at 2 AM.</p>
+
+        </div>
+      </div>
+
+      <!-- Server Logs -->
+      <div class="window" id="logs-window">
+        <div class="title-bar">---------------- [Server Logs] ----------------</div>
+        <div class="content" id="logs"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/chat_script.js"></script>
+</body>
+</html>

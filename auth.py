@@ -8,7 +8,7 @@ def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def get_auth_data() :
-    conn = sqlite3.connect("auth.db")
+    conn = sqlite3.connect("./data/auth.db")
     cursor = conn.cursor() 
 
     cursor.execute("SELECT * FROM login_auth")
@@ -23,7 +23,7 @@ def get_auth_data() :
 
 def create_auth() :
     
-    conn = sqlite3.connect("auth.db")
+    conn = sqlite3.connect("./data/auth.db")
     cursor = conn.cursor() 
 
     cursor.execute("""

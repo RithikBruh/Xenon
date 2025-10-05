@@ -13,7 +13,7 @@ import auth
 from admin_commands import admin_command
 # --------------------------
 
-DB_PATH = "chat.db"
+DB_PATH = "./data/chat.db"
 # Secret key for JWT
 SECRET = "a_very_long_random_string_with_letters_numbers_and_symbols_123!@#"
 # TODO : use env variable for SECRET and update secret 
@@ -78,6 +78,7 @@ class ConnectionManager:
                 }))
                     print(f"{username_entered} connected")
                     self.connections.append(ws)
+                
 
                 else :
                     # TODO : send reports to server console and store
@@ -118,6 +119,7 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+
 # --- Database helpers ---
 async def init_db():
     """Initialize the database and create tables if they don't exist."""
@@ -127,20 +129,22 @@ async def init_db():
             sender TEXT NOT NULL,
             recipient TEXT,
             message TEXT NOT NULL,
+            status TEXT ,
+            token TEXT ,
             timestamp TEXT 
         )
     """)
 
-    async with aiosqlite.connect(DB_PATH) as db:
-        data = await db.execute(
-            "SELECT username,password FROM login_auth;"
-        )
-        rows = await data.fetchall()
+    # async with aiosqlite.connect(DB_PATH) as db:
+    #     data = await db.execute(
+    #         "SELECT username,password FROM login_auth;"
+    #     )
+    #     rows = await data.fetchall()
 
 
             
 
-async def save_message(sender: str, recipient: str, message: str,timestamp :str):
+async def save_message(sender: str, recipient: str, message: str,status :str,timestamp :str):
     """Saves a message to the database."""
     if message[:5] == "$sudo":
         # Handle admin command
@@ -149,22 +153,21 @@ async def save_message(sender: str, recipient: str, message: str,timestamp :str)
 
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
-            "INSERT INTO messages (sender, recipient, message,timestamp) VALUES (?, ?, ?, ?)",
-            (sender, recipient, message,timestamp)
+            "INSERT INTO messages (sender, recipient, message,status,timestamp) VALUES (?, ?, ?, ?, ?)",
+            (sender, recipient, message,status ,timestamp)
         )
         await db.commit()
 
-async def fetch_last_messages(limit: int = 50):
+async def fetch_last_messages():
     """Fetch the last N messages from the database."""
     async with aiosqlite.connect(DB_PATH) as db:
         cur = await db.execute(
-            "SELECT id, sender, recipient, message, timestamp FROM messages ORDER BY id DESC LIMIT ?",
-            (limit,)
+            "SELECT id, sender, recipient, message, status, timestamp FROM messages ORDER BY id DESC",
         )
         rows = await cur.fetchall()
         # return in chronological order
         return [
-            {"id": r[0], "sender": r[1], "recipient": r[2], "message": r[3], "timestamp": r[4]}
+            {"id": r[0], "sender": r[1], "recipient": r[2], "message": r[3],"status" : r[4], "timestamp": r[5]}
             for r in reversed(rows)
         ]
 
@@ -176,9 +179,25 @@ async def startup_event():
 
 # --- HTTP endpoint to fetch last messages ---
 @app.get("/messages")
-async def get_messages(limit: int = 50):
-    msgs = await fetch_last_messages(limit)
+async def get_messages():
+    msgs = await fetch_last_messages()
     return {"messages": msgs}
+
+
+
+# -- Updating the status --
+async def update_status(users_online) :
+    recent = await fetch_last_messages()
+    for msgs in recent :
+        if  msgs['status'] == "unread" :
+            rest_users = [user for user in users_online if user != msgs['sender']]
+            if len(rest_users) > 0 :
+                    # if any user except the sender himself is online
+                    msgs['status'] = "read"
+                    run_sql("UPDATE messages SET status = ? WHERE id = ?", ("read", msgs['id']))
+
+
+    
 
 # --- WebSocket endpoint ---
 @app.websocket("/ws")
@@ -187,7 +206,10 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         # optional: when a client connects you could send recent history
-        recent = await fetch_last_messages(50)
+    
+        update_status(manager.connections)
+        recent = await fetch_last_messages()
+
         await websocket.send_text(json.dumps({"type": "history", "messages": recent}))
 
         while True:
@@ -199,6 +221,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 sender = data.get("sender", "unknown")
                 recipient = data.get("recipient")  # can be None for broadcast
                 message = data.get("message", "")
+                status = data.get("status", "unread")
                 timestamp = data.get("timestamp", "")
                 token_sent = data.get("token")
 
@@ -234,7 +257,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             # 1) persist in DB
-            await save_message(sender, recipient, message,timestamp)
+            await save_message(sender, recipient, message,status,timestamp)
 
 
             #TODO : change
@@ -244,6 +267,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 "sender": sender,
                 "recipient": recipient,
                 "message": message,
+                "status" : "unread",
                 "timestamp": timestamp
             }
            

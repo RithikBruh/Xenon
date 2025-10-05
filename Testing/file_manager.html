@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure File Manager</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    margin:0;
+}
+
+/* Lock screen */
+.lock-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(30,30,47,0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.lock-box {
+    background-color: #2c2c3c;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px #000;
+}
+
+.lock-box input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin: 10px 0;
+    width: 80%;
+    text-align: center;
+}
+
+.lock-box button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+
+/* File manager */
+.file-manager {
+    width: 500px;
+    background-color: #2c2c3c;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px #000;
+    margin-top: 20px;
+}
+
+.header h2 {
+    margin: 0 0 10px 0;
+}
+
+.files {
+    max-height: 400px;
+    overflow-y: auto;
+    border-top: 1px solid #555;
+    padding-top: 10px;
+}
+
+.file-item {
+    background-color: #3a3a4a;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.file-item:hover {
+    background-color: #4a4a5a;
+}
+
+.file-item .actions button {
+    background-color: #ff4c4c;
+    border: none;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div class="lock-screen" id="lockScreen">
+    <div class="lock-box">
+        <h2>Enter Password</h2>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <button id="unlockBtn">Unlock</button>
+        <p id="errorMsg" style="color: red; display:none;">Wrong Password!</p>
+    </div>
+</div>
+
+<!-- File Manager -->
+<div class="file-manager" id="fileManager" style="display:none;">
+    <div class="header">
+        <h2>File Manager</h2>
+    </div>
+    <div class="files" id="fileList"></div>
+</div>
+
+<script>
+// Password logic
+const lockScreen = document.getElementById('lockScreen');
+const fileManager = document.getElementById('fileManager');
+const passwordInput = document.getElementById('passwordInput');
+const unlockBtn = document.getElementById('unlockBtn');
+const errorMsg = document.getElementById('errorMsg');
+
+unlockBtn.addEventListener('click', () => {
+    if(passwordInput.value === 'admin'){
+        lockScreen.style.display = 'none';
+        fileManager.style.display = 'block';
+    } else {
+        errorMsg.style.display = 'block';
+    }
+});
+
+// Mock files and folders
+let files = [
+    { name: "Documents", type: "folder" },
+    { name: "Photos", type: "folder" },
+    { name: "Notes.txt", type: "file" },
+    { name: "Resume.pdf", type: "file" },
+    { name: "Budget.xlsx", type: "file" },
+    { name: "Projects", type: "folder" },
+    { name: "Todo.txt", type: "file" }
+];
+
+const fileList = document.getElementById('fileList');
+
+function renderFiles() {
+    fileList.innerHTML = '';
+    files.forEach((item, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+            <span>${item.type === 'folder' ? '📁' : '📄'} ${item.name}</span>
+            <div class="actions">
+                <button onclick="deleteFile(${index})">Delete</button>
+            </div>
+        `;
+        fileItem.onclick = () => {
+            if(item.type === 'folder'){
+                alert(`Opened folder: ${item.name}`);
+            } else {
+                alert(`Opened file: ${item.name}`);
+            }
+        }
+        fileList.appendChild(fileItem);
+    });
+}
+
+function deleteFile(index) {
+    files.splice(index, 1);
+    renderFiles();
+}
+
+// Initial render
+renderFiles();
+</script>
+</body>
+</html>

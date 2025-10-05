@@ -1,2 +1,3 @@
-k = "ok oey"
-print(k.split(" "))
+k = ""
+print(k.split(""))
+
