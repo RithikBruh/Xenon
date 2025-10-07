@@ -1,3 +1,19 @@
+// type writing effet -------
+const text = "Xenon";
+const speed = 200; // typing speed in ms
+let i = 0;
+
+function type() {
+  if (i < text.length) {
+      setTimeout(type, speed);
+      document.getElementById("ifjje").textContent += text.charAt(i);
+      i++;
+
+}
+}
+
+type() ;
+
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 const bt_text = document.getElementById("login_button");

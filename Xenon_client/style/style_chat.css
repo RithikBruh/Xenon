@@ -2,6 +2,39 @@
   cursor: url('../img/cursor.png'), auto !important;
 }
 
+.status-read {
+        color: #00a2ff;
+      text-shadow: 0 0 5px #00ff00;
+      font-size: 14px;
+}
+
+.status-unread {
+        color: #ff0000;
+      text-shadow: 0 0 5px #ff0000;
+      font-size: 14px;
+      font-weight: bold;
+}
+
+.username-button {
+    background: none;
+    border: none;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      font-size: 14px;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+.username-button:hover, .username-button:focus {
+    color: #008bfd;
+      text-shadow: 0 0 5px #002fff;
+
+    text-decoration: underline;
+    outline: none;
+}
+
 body {
   margin: 0;
   background: #0a0a0a;
@@ -86,7 +119,7 @@ body {
   text-shadow: 0 0 5px #00ff48;
   font-size: 17px;
   padding: 2px 0;
-      position: relative; /* make it above the overlay */
+  position: relative; /* make it above the overlay */
   z-index: 1;
 }
 #output, #input-box {

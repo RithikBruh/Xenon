@@ -21,7 +21,14 @@ auth_data = auth.get_auth_data()
 app = FastAPI()
 
 
-
+async def get_message_id() : 
+    async with aiosqlite.connect(DB_PATH) as db:
+        cur = await db.execute(
+            "SELECT id FROM messages ORDER BY id DESC LIMIT 1",
+        )
+        row = await cur.fetchone()
+        return row[0]
+        
 # --- General SQL execution function ---
 async def run_sql(query: str, params: tuple = (),inputs=None):
     """Run a SQL query."""
@@ -34,6 +41,7 @@ async def run_sql(query: str, params: tuple = (),inputs=None):
 class ConnectionManager:
     def __init__(self):
         self.connections: List[WebSocket] = []
+        self.users_online = []
 
     async def connect(self, ws: WebSocket):
         await ws.accept()
@@ -78,7 +86,7 @@ class ConnectionManager:
                 }))
                     print(f"{username_entered} connected")
                     self.connections.append(ws)
-                
+                    self.users_online.append(username_entered)
 
                 else :
                     # TODO : send reports to server console and store
@@ -130,7 +138,6 @@ async def init_db():
             recipient TEXT,
             message TEXT NOT NULL,
             status TEXT ,
-            token TEXT ,
             timestamp TEXT 
         )
     """)
@@ -194,24 +201,59 @@ async def update_status(users_online) :
             if len(rest_users) > 0 :
                     # if any user except the sender himself is online
                     msgs['status'] = "read"
-                    run_sql("UPDATE messages SET status = ? WHERE id = ?", ("read", msgs['id']))
+                    await run_sql("UPDATE messages SET status = ? WHERE id = ?", ("read", msgs['id']))
 
+async def broadcast_edit(edits) :
 
+    """ 
+    This Function Broad casts a edit to all users
+
+    edits format --- > {
+    "msg_id" : {
+    "status" : "read",
+    "message" : "edited message" 
+    }}
+
+    """
+
+    envelope = {
+                "type": "edit",
+                "sender": "server",
+                "edits" : edits
+                
+            }
     
+    await manager.broadcast(envelope)
+
+async def check_msg_status(msg_id,sender,users_online) :
+    rest_users = [user for user in users_online if user != sender]
+    if len(rest_users) > 0 :
+        # if any user except the sender himself is online
+        await run_sql("UPDATE messages SET status = ? WHERE id = ?", ("read", msg_id))
+
+        # broadcast status update
+        broadcast_edit({
+            msg_id : {
+                "status" : "read",
+                "message" : ""
+        }}
+    )
 
 # --- WebSocket endpoint ---
-@app.websocket("/ws")
+@app.websocket("/ws") #unique function runs everytime user asks to connect
 async def websocket_endpoint(websocket: WebSocket):
+    """ Unique function to every user"""
     # connect and keep receiving
-    await manager.connect(websocket)
+    print("A user requested to connect")
+    await manager.connect(websocket) # if correct cred then it will append to maanger.connections []
     try:
         # optional: when a client connects you could send recent history
-    
-        update_status(manager.connections)
+        print(manager.connections)
+        await update_status(manager.users_online)
         recent = await fetch_last_messages()
 
         await websocket.send_text(json.dumps({"type": "history", "messages": recent}))
-
+        # print("loop entering")
         while True:
             text = await websocket.receive_text()  # expects JSON string
             # expected payload: {"sender":"alice","recipient":"bob","message":"hi",timestamp :  "yy-mm-dd hh:mm:ss"}
@@ -263,15 +305,17 @@ async def websocket_endpoint(websocket: WebSocket):
             #TODO : change
             # 2) broadcast to all connected clients (simple approach)
             envelope = {
+                "id" : await get_message_id(),
                 "type": "message",
                 "sender": sender,
                 "recipient": recipient,
                 "message": message,
-                "status" : "unread",
+                "status" : status,
                 "timestamp": timestamp
             }
            
             await manager.broadcast(envelope)
+            await check_msg_status(envelope['id'],sender,manager.users_online)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Typewriter Effect</title>
+  <style>
+    body {
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+      color: #0f0;
+      font-size: 24px;
+    }
+    .caret {
+      display: inline-block;
+      width: 2px;
+      background: #0f0;
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="typewriter"></div><div class="caret"></div>
+
+  <script>
+    const text = "Hello, this is a simple typewriter effect!";
+    const speed = 100; // typing speed in ms
+    let i = 0;
+
+    function type() {
+      if (i < text.length) {
+        document.getElementById("typewriter").textContent += text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      }
+    }
+
+    type();
+  </script>
+</body>
+</html>
