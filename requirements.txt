@@ -1,7 +1,0 @@
-fastapi 
-uvicorn 
-aiosqlite 
-websockets
-bcrypt 
-PyJWT
-

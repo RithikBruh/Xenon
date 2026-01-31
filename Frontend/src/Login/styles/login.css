@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  /* padding: 0; */
+  overflow: hidden;
+}
+.heading {
+    margin : 0 ; 
+    padding : 0 ; 
+    text-align: center;
+    color : #39ff14;
+}
+.subheading{
+    color:#7aa88c ;
+    text-align :center ;
+}
+
+.trademark {
+    color : #39ff14 ;
+    text-align : center ;
+    margin : 1em ;
+
+}
+.login-container {
+    display : flex ;
+    flex-direction : column;
+    border : solid 1px #31e611 ; 
+
+      padding: 20px;
+      padding-bottom : 30px ;
+  border-radius: 16px;
+  background-color: rgba(11, 13, 8, 0.754);
+
+  /* border: 2px solid #31e611;
+
+  box-shadow:
+    0 0 8px  #31e611,
+    0 0 16px #31e611,
+    0 0 32px #31e611; */
+}
+
+
+/* .heading {
+    color : white ;     
+    text-align : center; 
+    margin-top : 0 px ;
+    padding-top : 0 vh ;
+    border: red solid 2px;
+    z-index : 1 ;
+} */
+.infinite-bg {
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 1;
+  background-image: url("../../assets/bg.jpeg");
+  background-repeat: repeat-y;
+  background-size: cover;
+
+  animation: scrollBg 100s linear infinite;
+
+  display : flex ;
+  flex-direction: column; 
+  justify-content : center ;
+  align-items: center;
+}
+
+@keyframes scrollBg {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -2000px;
+  }
+}

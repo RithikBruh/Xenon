@@ -1,0 +1,16 @@
+.username-text , .password-text {
+    color : #7aa88c ;
+    margin : 0.5em ;
+}
+
+.username-input , .password-input {
+    border-radius : 8px ;
+    border : solid 1px #39ff14 ;
+    background-color: rgba(11, 13, 8, 0.754);
+    padding : 8px ;
+    margin-top : 4px ;
+    margin-bottom : 12px ;
+
+    width: 50vh;
+    font-size: 1.4em;
+}
