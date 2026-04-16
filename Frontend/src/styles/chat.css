@@ -1,0 +1,232 @@
+body{
+    height : 100%;
+    margin : 0;
+    background-color: #0a0a0a;
+    /* background-color: #222; */
+    /* text-shadow : 0 0 5px #00ff00; */
+    /* font-family: "Consolas", monospace; */
+    font-family: "Ubuntu Mono", monospace;
+
+}
+
+.chat {
+    color : #00ff00;
+}
+
+.window{
+    height : 100vh;
+    display : flex;
+    flex-direction : row;
+}
+
+.sidebar {
+    border-left : 1px solid #00ff00;
+    height : 100%;
+}
+
+.chat-container {
+    /* border : 2px solid black; */
+    flex : 1;
+    min-height : 0;
+}
+
+.chat-heading {
+    color :#00ff00;
+    text-align : center;
+    padding: 0;
+    margin : 4px 0px 0px 10px;
+}
+
+.input-container {
+    min-height : 10%;
+    /* border-top : 1px solid #1f1f1f;
+     */
+    /* border : green 1px solid ; */
+    padding : 0px 0px;
+    margin: 0px;
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    gap : 4px;
+    cursor : text;
+    flex : 0 0 auto;
+}
+
+.left-panel {
+    display : flex;
+    flex-direction : column;
+    width : 75%;
+    height : 100%;
+}
+
+.right-panel {
+    width : 25%;
+    height : 100%;
+}
+
+.input-heading {
+    color : #00ff00;
+    margin : 0px;
+    text-align: center;
+
+}
+
+.terminal-mode {
+    color : #00ff00;
+    font-size : 12px;
+    line-height : 1;
+}
+
+.terminal-history {
+    display : flex;
+    flex-direction : column;
+    gap : 2px;
+    min-height : 14px;
+}
+
+/* .terminal-line {
+    color : #7dff7d;
+    font-family : monospace;
+    font-size : 12px;
+    line-height : 1;
+    white-space : nowrap;
+    overflow : hidden;
+    text-overflow : ellipsis;
+} */
+
+.terminal-form {
+    display : flex;
+    align-items : flex-start;
+    gap : 6px;
+}
+
+.terminal-prompt {
+    color : #00ff00;
+    font-family : monospace;
+    font-size : 14px;
+}
+
+.terminal-input {
+    width: 100%;
+    flex : 1;
+    background : transparent;
+    border : none;
+    outline : none;
+    color : #00ff00;
+    font-family : monospace;
+    font-size : 14px;
+    caret-color : transparent;
+    cursor : text;
+    line-height : 1.2;
+    resize : none;
+    overflow : hidden;
+    white-space : pre-wrap;
+    word-break : break-word;
+    min-height : 1.2em;
+    margin : 0;
+    padding : 0;
+    position : relative;
+    z-index : 2;
+}
+
+.terminal-input-wrapper {
+    position : relative;
+    flex : 1;
+}
+
+.terminal-block-cursor {
+    position : absolute;
+    left : var(--cursor-left, 0px);
+    top : var(--cursor-top, 0px);
+    width : 1.4ch;
+    height : 1.2em;
+    background : #00ff00;
+    opacity : 0.85;
+    pointer-events : none;
+    z-index : 1;
+    animation : block-caret-blink 1s steps(1, end) infinite;
+}
+
+.folders {
+    height : 79%;
+    overflow-y : auto;
+}
+
+
+.files-heading {
+    text-align: center;
+}
+.file-manager {
+    border : 1px solid #00ff00;
+    margin : 10px;
+    padding : 10px;
+    padding-top : 0px ;
+    color : #00ff00;
+    height : 50%;
+}
+
+.file-heading{
+    padding : 0 ;
+    margin-top : 5px;
+}
+
+.pages-heading {
+    text-align: center;
+}
+
+.image-gallery {
+    margin-top : 10px;
+}
+.gallery-heading {
+    text-align : center ;
+}
+
+.links-heading {
+    text-align : center ;
+}
+.filemanager-footer {
+    display : flex;
+    /* justify-content : space-between; */
+    gap : 5px ;
+    margin-top: 10px ;
+}
+.create-button , .delete-button,.upload-button {
+    background : transparent;
+    border : 1px solid #00ff00;
+    color : #00ff00;
+    padding : 4px 8px;
+    cursor : pointer;
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: bold;
+    /* font-family : monospace */
+    /* font-size : 12px; */
+}
+
+.create-button:hover , .delete-button:hover,.upload-button:hover {
+    background : #00ff00;
+    color : #0a0a0a;
+}
+
+.active-users {
+    border : 1px solid #00ff00;
+    margin : 10px;
+    padding : 10px;
+    color : #00ff00;
+    height : 10%;
+    overflow-y: auto;
+}
+@keyframes block-caret-blink {
+    0%,
+    49% {
+        opacity : 0.85;
+    }
+
+    50%,
+    100% {
+        opacity : 0;
+    }
+}
+
+.terminal-input::placeholder {
+    color : #4f7d4f;
+}
