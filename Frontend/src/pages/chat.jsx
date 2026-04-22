@@ -5,7 +5,7 @@ import ChatContainer from "../components/chatWindow";
 import InputBox from "../components/inputBox";
 import { useEffect } from "react";
 import { useState } from "react";
-import socket from "../socket";
+import {connectSocket,sendMessage} from "../socket";
 
 export default function Chat() {
   const location = useLocation();
@@ -15,6 +15,12 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   const [activeUsers,setActiveUsers] = useState([]);
+  const [showTime , setShowTime] = useState(false);
+
+  const handleMsgClick = (msgId) => {
+    console.log("Message clicked:", msgId);
+  };
+
 
   useEffect(() => {
     console.log(localStorage.getItem("LoggedIn"));
@@ -25,64 +31,19 @@ export default function Chat() {
 
   useEffect(() => {
     // Connect socket when chat loads
-    socket.connect();
-
-    console.log("Connecting socket...");
-
-    socket.on("welcome",(data)=>{
-      console.log(data.messages);
-      setMessages(data.messages);
-    })
-    
-    socket.on("active-users",(data)=>{
-      console.log("Active users:", data);
-      setActiveUsers(data);
-    })
-    // Listen for incoming messages
-    socket.on("receive-message", (data) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender : data.username,
-          content: data.payload.message,
-          timestamp: data.payload.timestamp,
-          pinned : data.payload.pinned
-        },
-      ]);
-    });
-
-    // Handle auth errors
-    socket.on("connect_error", (err) => {
-      console.log("Socket error:", err.message);
-    });
-
-    // Cleanup
-    return () => {
-      socket.off("receive-message");
-
-      socket.disconnect();
-    };
+    // It recives updates from server
+    connectSocket(setMessages, setActiveUsers);
   }, []);
-
-  const sendMessage = () => {
-    if (!message.trim()) return;
-    const payload = {
-      message: message.trim(),
-    };
-    socket.emit("send-message", payload);
-
-    setMessage("");
-    // console.log(messages);
-  };
 
   return (
     <div className="window">
       <div className="left-panel">
-        <ChatContainer messages={messages} />
+        <ChatContainer messages={messages} handleMsgClick={handleMsgClick} showTime={showTime} />
         <InputBox
           message={message}
           setMessage={setMessage}
-          sendMessage={sendMessage}
+          sendMessage={() => sendMessage(message, setMessage)}
+          ToggleShowTime={()=>setShowTime((prev)=>!prev)}
         />
       </div>
       <div className="right-panel">

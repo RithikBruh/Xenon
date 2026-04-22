@@ -53,7 +53,7 @@ export default function FileManager() {
               ))}
             </div>
           )}
-          <input type="file" onChange={handleUpload} />
+          
         </div>
 
         <div className="image-gallery">
@@ -69,7 +69,11 @@ export default function FileManager() {
 
       <div className="filemanager-footer">
         <button className="create-button">Create</button>
-        <button className="upload-button">Upload</button>
+       <label for="fileUpload" class="upload-button">
+  Upload 
+</label>
+
+<input type="file" id="fileUpload" onChange={handleUpload} hidden></input>
         <button className="delete-button">Delete</button>
       </div>
     </div>

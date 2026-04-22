@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function InputBox({message, setMessage, sendMessage}) {
+export default function InputBox({message, setMessage, sendMessage,ToggleShowTime}) {
 
 
 
@@ -88,13 +88,6 @@ export default function InputBox({message, setMessage, sendMessage}) {
         <div className="input-container" onClick={() => inputElementRef.current?.focus()}>
             <h4 className="input-heading">------------------------------------------------------------ [INPUT] -----------------------------------------------------------</h4>
 
-            {/* <div className="terminal-history">
-                {history.slice(-2).map((entry, index) => (
-                    <div key={`${entry}-${index}`} className="terminal-line">
-                        &gt; {entry}
-                    </div>
-                ))}
-            </div> */}
 
             <form onSubmit={handleSubmit} className="terminal-form">
                 <div className="terminal-prompt">&gt;</div>
@@ -136,18 +129,16 @@ export default function InputBox({message, setMessage, sendMessage}) {
                         }}
                         onBlur={() => setIsFocused(false)}
                         rows={1}
-                        spellCheck={false}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        autoCapitalize="off"
                         placeholder="chat.."
                     />
                 </div>
             </form>
+
+
             <div className="button-container">
                 <button onClick={handleSubmit}>Send</button>
                 <button onClick={handleSubmit}>Send</button>
-                <button onClick={handleSubmit}>Send</button>
+                <button onClick={ToggleShowTime}>Show Times</button>
 
             </div>
         </div>

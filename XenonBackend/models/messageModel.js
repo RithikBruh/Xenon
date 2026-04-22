@@ -17,7 +17,7 @@ createTableIfnotExists();
 
 async function saveMessage(username,message){
   const result = await pool.query(
-    "INSERT INTO messages (sender, content) VALUES ($1, $2) RETURNING timestamp",
+    "INSERT INTO messages (sender, content) VALUES ($1, $2) RETURNING TO_CHAR(timestamp, 'YYYY-MM-DD HH24:MI:SS') AS timestamp",
     [username, message]
   );
 
@@ -26,7 +26,7 @@ async function saveMessage(username,message){
 
 async function getMessages(){
     const result = await pool.query(
-        "SELECT sender, content, pinned, timestamp FROM messages ORDER BY timestamp ASC"
+    "SELECT sender, id, content, pinned, TO_CHAR(timestamp, 'YYYY-MM-DD HH24:MI:SS') AS timestamp FROM messages ORDER BY timestamp ASC"
     );
     // console.log("Fetched messages from DB: " + JSON.stringify(result.rows));
     return result.rows;

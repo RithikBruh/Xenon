@@ -11,8 +11,19 @@ body{
 
 .chat {
     color : #00ff00;
+    overflow-y : auto;
+    height : 97%;    
 }
 
+.message {
+    margin-top : 20px ;
+    color :#00ff00;
+    text-decoration: none;
+}
+
+.message:hover {
+    color : rgb(22, 41, 249);   
+}
 .window{
     height : 100vh;
     display : flex;

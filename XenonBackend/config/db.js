@@ -21,6 +21,7 @@ const pool = new Pool({
   database: "xenon",
   password: process.env.DB_PASSWORD,
   port: 5432,
+  options: "-c timezone=Asia/Kolkata",
 });
 
 export default pool;
