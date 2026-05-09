@@ -226,6 +226,11 @@ body{
     height : 10%;
     overflow-y: auto;
 }
+
+.active-users-heading {
+    text-align : center;
+    margin : 0;
+}
 @keyframes block-caret-blink {
     0%,
     49% {
@@ -240,4 +245,23 @@ body{
 
 .terminal-input::placeholder {
     color : #4f7d4f;
+}
+
+
+.pinned-msgs {
+    border : 1px solid #00ff00;
+    margin : 10px;
+    padding : 10px;
+    color : #00ff00;
+    height : 20%;
+    overflow-y: auto;
+}   
+
+.pinned-heading {
+    text-align : center;
+    margin : 0;
+}
+
+.pinned-container {
+    overflow-y: auto;
 }

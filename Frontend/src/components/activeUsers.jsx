@@ -1,6 +1,6 @@
 export default function ActiveUsers({activeUsers}) {
     return (<div className="active-users">
-        <h4 className = "active-users-heading">---------- [Active Users] ---------- </h4>
+        <h4 className = "active-users-heading" >---------- [Active Users] ---------- </h4>
         <div className="users">
             {activeUsers.length > 0 ? (
                 <ul>

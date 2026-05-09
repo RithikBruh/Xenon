@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function InputBox({message, setMessage, sendMessage,ToggleShowTime}) {
+export default function InputBox({message, setMessage, sendMessage,ToggleshowMore,handleDelete,handleDeleteR,handlePin}) {
 
 
 
@@ -137,8 +137,10 @@ export default function InputBox({message, setMessage, sendMessage,ToggleShowTim
 
             <div className="button-container">
                 <button onClick={handleSubmit}>Send</button>
-                <button onClick={handleSubmit}>Send</button>
-                <button onClick={ToggleShowTime}>Show Times</button>
+                <button onClick={handlePin}>Pin</button>
+                <button onClick={ToggleshowMore}>show More</button>
+                <button onClick={handleDelete}>Delete</button>
+                <button onClick={handleDeleteR}>DelR</button>
 
             </div>
         </div>

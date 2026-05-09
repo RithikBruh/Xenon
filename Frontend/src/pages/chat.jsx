@@ -15,12 +15,25 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   const [activeUsers,setActiveUsers] = useState([]);
-  const [showTime , setShowTime] = useState(false);
+  const [showMore , setshowMore] = useState(false);
 
   const handleMsgClick = (msgId) => {
+    // const m = message
+    setMessage(message + ` [${msgId}] `);
     console.log("Message clicked:", msgId);
   };
 
+  const handleDelete = () => {
+    setMessage("\\delete "+message);
+  }
+
+  const handleDeleteR = () => {
+    setMessage("\\deleteRange "+message);
+  }
+
+  const handlePin = () => {
+    setMessage("\\pin "+message);
+  }
 
   useEffect(() => {
     console.log(localStorage.getItem("LoggedIn"));
@@ -38,12 +51,15 @@ export default function Chat() {
   return (
     <div className="window">
       <div className="left-panel">
-        <ChatContainer messages={messages} handleMsgClick={handleMsgClick} showTime={showTime} />
+        <ChatContainer messages={messages} handleMsgClick={handleMsgClick} showMore={showMore} />
         <InputBox
           message={message}
           setMessage={setMessage}
           sendMessage={() => sendMessage(message, setMessage)}
-          ToggleShowTime={()=>setShowTime((prev)=>!prev)}
+          ToggleshowMore={()=>setshowMore((prev)=>!prev)}
+          handleDelete={handleDelete}
+          handleDeleteR={handleDeleteR}
+          handlePin={handlePin}
         />
       </div>
       <div className="right-panel">

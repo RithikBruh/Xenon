@@ -36,6 +36,10 @@ export function connectSocket(setMessages, setActiveUsers) {
       console.log("Received message:", data.paylod.timestamp);
     });
 
+    socket.on("refresh-messages", (data) => { 
+      setMessages(data.messages);
+      console.log("Messages refreshed:", data.messages);
+    });
     // Handle auth errors
     socket.on("connect_error", (err) => {
       console.log("Socket error:", err.message);
