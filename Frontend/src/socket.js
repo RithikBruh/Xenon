@@ -8,21 +8,14 @@ const socket = io("http://localhost:3000", {
 export function connectSocket(
   setMessages,
   setActiveUsers,
-  setPinnedMessages,
 ) {
   socket.connect();
 
   console.log("Connecting socket...");
 
   socket.on("welcome", (data) => {
-    console.log(data.messages);
+    // console.log(data.messages);
     setMessages(data.messages);
-
-    for (let message of data.messages) {
-      if (message.pinned) {
-        setPinnedMessages((prev) => [...prev, message]);
-      }
-    }
     console.log("Socket connected, welcome message received.", data.messages);
   });
 

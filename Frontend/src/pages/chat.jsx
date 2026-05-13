@@ -15,7 +15,6 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   const [activeUsers,setActiveUsers] = useState([]);
-  const [pinnedMessages,setPinnedMessages] = useState([]);
   const [showMore , setshowMore] = useState(false);
 
   const handleMsgClick = (msgId) => {
@@ -46,7 +45,7 @@ export default function Chat() {
   useEffect(() => {
     // Connect socket when chat loads
     // It recives updates from server
-    connectSocket(setMessages, setActiveUsers,setPinnedMessages);
+    connectSocket(setMessages, setActiveUsers);
   }, []);
 
   return (
