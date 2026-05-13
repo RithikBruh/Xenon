@@ -76,6 +76,7 @@ export {
   getMessages,
   deleteMessage,
   deleteRange,
-  pinMessages
+  pinMessages,
+  getPinnedMessages
 };
 

@@ -1,6 +1,7 @@
 import { get } from "mongoose";
 import { deleteMessage, deleteRange } from "../models/messageModel.js";
 import { getMessages } from "../models/messageModel.js";
+import { pinMessages, getPinnedMessages } from "../models/messageModel.js";
 
 export function AdminCommandHandler(message,io) {
   if (message.startsWith("\\deleteRange ")) {
@@ -46,9 +47,8 @@ export function AdminCommandHandler(message,io) {
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id));
 
+
     pinMessages(idsToPin)
-      .then(() => {
-        getPinnedMessages().then(messages => io.emit("pinned-messages", messages));
-      })
+      .then(io.emit("refresh-pinned" , {ids: idsToPin}))
 }
 }

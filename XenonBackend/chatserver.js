@@ -7,17 +7,15 @@ function chatSocket(io) {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.user.username);
 
-
     activeUsers.push(socket.user.username);
 
     // Join a room specific to the user for private messages
     socket.join(socket.user.username);
     // Fetch messages from database and send privately to user
     getMessages().then((messages) => {
-    io.to(socket.user.username).emit("welcome", {
-      messages: messages,
-    });
-
+      io.to(socket.user.username).emit("welcome", {
+        messages: messages,
+      });
     });
 
     io.emit("active-users", activeUsers);
@@ -26,19 +24,20 @@ function chatSocket(io) {
       // console.log(payload);
 
       // Save message to database and then emit to all clients
-      saveMessage(socket.user.username, payload.message).then(({id,timestamp}) => {
-        payload.id = id;
-        payload.timestamp = timestamp;
-        io.emit("receive-message", {
-          username: socket.user.username,
-          payload,
+      saveMessage(socket.user.username, payload.message)
+        .then(({ id, timestamp }) => {
+          payload.id = id;
+          payload.timestamp = timestamp;
+          io.emit("receive-message", {
+            username: socket.user.username,
+            payload,
+          });
+          console.log("Message saved and emitted:", payload);
+        })
+        .then(() => {
+          //Check for admin commands
+          AdminCommandHandler(payload.message, io);
         });
-        console.log("Message saved and emitted:", payload);
-      });
-
-      //Check for admin commands 
-      AdminCommandHandler(payload.message,io) ;
-      
     });
 
     socket.on("disconnect", () => {

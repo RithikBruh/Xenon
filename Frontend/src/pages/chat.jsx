@@ -15,6 +15,7 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   const [activeUsers,setActiveUsers] = useState([]);
+  const [pinnedMessages,setPinnedMessages] = useState([]);
   const [showMore , setshowMore] = useState(false);
 
   const handleMsgClick = (msgId) => {
@@ -45,7 +46,7 @@ export default function Chat() {
   useEffect(() => {
     // Connect socket when chat loads
     // It recives updates from server
-    connectSocket(setMessages, setActiveUsers);
+    connectSocket(setMessages, setActiveUsers,setPinnedMessages);
   }, []);
 
   return (
@@ -63,7 +64,7 @@ export default function Chat() {
         />
       </div>
       <div className="right-panel">
-        <Sidebar activeUsers={activeUsers}/>{" "}
+        <Sidebar activeUsers={activeUsers} messages={messages} />{" "}
       </div>{" "}
     </div>
   );
