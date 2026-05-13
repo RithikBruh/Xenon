@@ -35,17 +35,12 @@ export default function Chat() {
     setMessage("\\pin "+message);
   }
 
-  useEffect(() => {
-    console.log(localStorage.getItem("LoggedIn"));
-    if (localStorage.getItem("LoggedIn") != "true") {
-      return <h1>Please Login</h1>;
-    }
-  });
 
   useEffect(() => {
+    console.log("Connecting socket...");
     // Connect socket when chat loads
     // It recives updates from server
-    connectSocket(setMessages, setActiveUsers);
+    return connectSocket(setMessages, setActiveUsers);
   }, []);
 
   return (

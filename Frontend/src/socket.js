@@ -5,27 +5,21 @@ const socket = io("http://localhost:3000", {
   autoConnect: false,
 });
 
-export function connectSocket(
-  setMessages,
-  setActiveUsers,
-) {
+export function connectSocket(setMessages, setActiveUsers) {
   socket.connect();
 
   console.log("Connecting socket...");
 
-  socket.on("welcome", (data) => {
-    // console.log(data.messages);
+  const onWelcome = (data) => {
     setMessages(data.messages);
-    console.log("Socket connected, welcome message received.", data.messages);
-  });
+    console.log("Socket connected.", data.messages);
+  };
 
-  socket.on("active-users", (data) => {
-    console.log("Active users:", data);
+  const onActiveUsers = (data) => {
     setActiveUsers(data);
-  });
+  };
 
-  // Listen for incoming messages
-  socket.on("receive-message", (data) => {
+  const onReceiveMessage = (data) => {
     setMessages((prev) => [
       ...prev,
       {
@@ -36,41 +30,46 @@ export function connectSocket(
         pinned: data.payload.pinned,
       },
     ]);
-    // console.log("Received message:", data.paylod.timestamp);
-  });
+  };
 
-  socket.on("refresh-messages", (data) => {
+  const onRefreshMessages = (data) => {
     setMessages(data.messages);
-    console.log("Messages refreshed:", data.messages);
-  });
+  };
 
-  socket.on("refresh-pinned", (data) => {
-    let ids = data.ids; //id's to pin
+  const onRefreshPinned = (data) => {
+    const ids = data.ids;
+
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
-        ids.includes(msg.id) ? { ...msg, pinned: true } : msg,
-      ),
+        ids.includes(msg.id)
+          ? { ...msg, pinned: true }
+          : msg
+      )
     );
-    console.log("Pinned messages refreshed:", ids);
-  });
+  };
 
+  socket.on("welcome", onWelcome);
+  socket.on("active-users", onActiveUsers);
+  socket.on("receive-message", onReceiveMessage);
+  socket.on("refresh-messages", onRefreshMessages);
+  socket.on("refresh-pinned", onRefreshPinned);
 
-  // console.log("wtf is ",messages)
-
-  // console.log("messages refreshed:", messages_);
-  // Handle auth errors
-  socket.on("connect_error", (err) => {
-    console.log("Socket error:", err.message);
-  });
-
-  // Cleanup
   return () => {
-    socket.off("receive-message");
+    console.log("Cleaning socket listeners...");
+
+    socket.off("welcome", onWelcome);
+    socket.off("active-users", onActiveUsers);
+    socket.off("receive-message", onReceiveMessage);
+    socket.off("refresh-messages", onRefreshMessages);
+    socket.off("refresh-pinned", onRefreshPinned);
+
     socket.disconnect();
   };
 }
 
+
 export function sendMessage(message, setMessage) {
+  console.log("Sending message:", message);
   if (!message.trim()) return;
   const payload = {
     message: message.trim(),

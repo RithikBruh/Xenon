@@ -37,6 +37,7 @@ export function AdminCommandHandler(message,io) {
         getMessages(idsToDelete).then(messages => io.emit("refresh-messages",messages))
       })
     } 
+    
   else if (message.startsWith("\\pin")) {
     console.log("Pin Admin command detected: " + message);
     message = message.replace(/[\[\]]/g, ""); // Remove square brackets if present
@@ -51,4 +52,6 @@ export function AdminCommandHandler(message,io) {
     pinMessages(idsToPin)
       .then(io.emit("refresh-pinned" , {ids: idsToPin}))
 }
+
+
 }
